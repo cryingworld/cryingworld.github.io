@@ -1,0 +1,1066 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 SELinux简介SELinux(Security-Enhanced Linux)是NSA对于强制访问控制的实现，是Linux历史上最杰出的新安全子系统，主要作用是最大限度的减少系统中服务进程可访问的资源，使用安全上下文实现，如果进程和需要访问的资源的安全上下文不匹配，那么是无法成功访问资源的。SELinux是一种基于 域-类型 模型（domain-type）的强制访问控制（MAC）安全系统，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SELinux简介">
+<meta property="og:url" content="http://example.com/2025/05/13/SELinux%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1 SELinux简介SELinux(Security-Enhanced Linux)是NSA对于强制访问控制的实现，是Linux历史上最杰出的新安全子系统，主要作用是最大限度的减少系统中服务进程可访问的资源，使用安全上下文实现，如果进程和需要访问的资源的安全上下文不匹配，那么是无法成功访问资源的。SELinux是一种基于 域-类型 模型（domain-type）的强制访问控制（MAC）安全系统，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/866f2ab4d7bfe75d724aa13e76d823ab.png">
+<meta property="article:published_time" content="2025-05-13T13:26:56.000Z">
+<meta property="article:modified_time" content="2025-05-13T13:55:13.072Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/866f2ab4d7bfe75d724aa13e76d823ab.png">
+  
+  
+  
+  <title>SELinux简介 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SELinux简介"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-13 21:26" pubdate>
+          May 13, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          70 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">SELinux简介</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="1-SELinux简介"><a href="#1-SELinux简介" class="headerlink" title="1 SELinux简介"></a>1 SELinux简介</h2><p><font color = black><strong>SELinux(Security-Enhanced Linux)</strong></font>是NSA对于强制访问控制的实现，是Linux历史上最杰出的新安全子系统，主要作用是最大限度的减少系统中服务进程可访问的资源，使用安全上下文实现，如果进程和需要访问的资源的安全上下文不匹配，那么是无法成功访问资源的。<br>SELinux是一种基于 域-类型 模型（domain-type）的强制访问控制（MAC）安全系统，它由NSA编写并设计成内核模块包含到内核中，相应的某些安全相关的应用也被打了SELinux的补丁，最后还有一个相应的安全策略。SELinux 能够执行广泛的安全目标，从简单的沙盒应用程序到锁定面向网络的守护程序，以及将用户限制为仅使用他们工作所需的资源。任何程序对其资源享有完全的控制权。假设某个程序打算把含有潜在重要信息的文件扔到&#x2F;tmp目录下，那么在DAC情况下没人能阻止他。SELinux提供了比传统的UNIX权限更好的访问控制<br>**强制访问控制(mandatory access control)**：缩写MAC，在计算机安全领域指由操作系统约束的访问控制，目标是限制主体或发起者访问或对对象或目标执行某种操作的能力<br>SELinux的作用：</p>
+<ol>
+<li>如果启用 SELinux，则策略定义允许对资源的访问和操作（例如读、写）（即 SELinux 停止所有访问，除非策略允许）。这就是为什么 SELinux 被称为“强制访问控制”（MAC）系统的原因。</li>
+<li>针对已定义的安全策略或要求进行策略设计、实施和测试很重要，否则可能会出现“错误的安全感”。</li>
+<li>SELinux 可以将应用程序限制在自己的“域”内，并允许它拥有完成其工作所需的最低权限。如果应用程序需要访问网络或其他应用程序（或它们的数据），那么（作为安全策略设计的一部分），需要授予这种访问权限（因此至少知道哪些交互是允许的，哪些是不允许的——一个好的安全目标）。</li>
+<li>如果应用程序“做某事”是政策不允许的（有意或无意），那么 SELinux 将停止这些操作。</li>
+<li>如果一个应用程序在政策允许的情况下“做某事”，那么 SELinux 可能包含任何有意或无意造成的损害。例如，如果允许应用程序删除其所有数据文件或数据库条目，并且错误、病毒或恶意用户获得这些特权，那么它也可以这样做，但好消息是，如果策略“受限”应用程序和数据，所有其他数据应该仍然存在。</li>
+<li>用户登录会话可以限制在他们自己的域中。这允许他们运行的客户只获得他们需要的特权（例如管理员用户、销售人员用户、人力资源人员用户等）。这将再次限制&#x2F;限制数据的任何损坏或泄漏。</li>
+<li>一些应用程序（例如 X-Windows）很难限制，因为它们通常被设计为可以完全访问所有资源。SELinux 通常可以通过提供沙盒服务来克服这些问题。</li>
+<li>SELinux 不会阻止内存泄漏或缓冲区溢出（因为它不是为此而设计的），但是它可能包含可能造成的损害。</li>
+<li>SELinux 不会阻止所有病毒&#x2F;恶意软件进入系统（因为它们可以通过多种方式引入（包括由合法用户引入），但它应该限制它们造成的损害或泄漏。</li>
+<li>SELinux 不会阻止内核漏洞，但是它可能会限制它们的影响。</li>
+<li>如果用户具有相关权限，使用诸如<strong>audit2allow</strong> (1)之类的工具很容易将新规则添加到 SELinux 策略中，但是请注意，这可能会开始打开漏洞，因此请检查真正需要哪些规则。</li>
+<li>最后，SELinux 无法阻止安全策略允许的任何事情，因此良好的设计很重要<br><strong>基础概念</strong></li>
+</ol>
+<ul>
+<li><p>主体：通常是进程或者线程</p>
+</li>
+<li><p>对象：文件，目录，TCP&#x2F;UDP端口，共享内存段，I&#x2F;O设备</p>
+</li>
+<li><p>DAC：Discreationary Access Control 自主访问控制。基于用户表示的访问控制，例如一个文件，文件所有者，同组用户，其他组用户</p>
+</li>
+<li><p>MAC：同上，提供了一个灵活的MAC,类型强制TE</p>
+<ul>
+<li>类型强制TE：Type Enforcement SELinux策略大部分内容都是由多条类型强制规则构成的，这些规则控制被允许的使用权，大多数默认转换标志，审核，以及固定部分的检查。一个定义良好、严格的TE策略可能包括上千个TE规则，TE规则表达了所有由内核暴露出的允许对资源的访问权，这意味着每个进程对每个资源的访问尝试都必须至少要有一条被允许的TE规则</li>
+</ul>
+</li>
+<li><p>安全上下文：传统Linux，一切皆文件，由用户，组，权限控制访问。SELinux中，一切皆对象(object)，由存放在inode的扩展属性域的安全元素所控制其访问，所有文件和端口资源和进程都具备安全标签，即安全上下文(security context)，其组成如下。<font color = green>使用方法：ls -Z(文件)，ps -Z(进程)，id -Z(用户)</font>。</p>
+<ul>
+<li><p>用户 user：指示登录系统的用户类型</p>
+<ul>
+<li><p>unconfined_u：不受限的用户</p>
+</li>
+<li><p>system_u：系统用户</p>
+</li>
+</ul>
+</li>
+<li><p>角色 role：定义文件，进程和用户的用途；文件：object_r、进程和用户：system_r。RBAC(role based access control)机制：基于角色的访问控制，对操作系统的各种权限不是直接授予具体的用户，而是在用户集合和权限集合之间建立一个角色集合，每一个角色对应一组相应的权限，一旦用户被分配了适当的角色后，该用户就拥有了此角色的所有操作权限，这样做的好处是，不必在每次创建用户时都进行分配权限的操作，只要分配用户相应的角色即可，而且角色的权限变更比用户的权限变更要少得多，这样将简化用户的权限管理，减少系统的开销。</p>
+</li>
+<li><p>类型标识符 type：指定数据类型，规则中定义何种进程类型访问何种文件Target策略基于type实现，多服务公用：public_content_t。文件资源中是类型，主体进程中是域</p>
+</li>
+<li><p>sensitivity 灵敏度：限制访问的需要，由组织定义的分层安全级别，如unclassified，secret，top。一个对象有且只要一个sensitivity，分0-15级，s0最低，target策略默认为s0</p>
+</li>
+<li><p>categories 类别：用于对特定组织划分不分层的分类，如FBI，NSA secret，一个对象可以有多个category，c0-c1023共有1024个分类，Target策略不适用category</p>
+</li>
+</ul>
+</li>
+<li><p>安全级别</p>
+<ul>
+<li><p>H MLS(Multi-Level Security) 多级安全:防止泄密类似情况</p>
+</li>
+<li><p>I MCS(Multi-Category Security) 多类别安全</p>
+</li>
+</ul>
+</li>
+<li><p>域：进程的类型通常被称为一个域<br><strong>主体和对象</strong>各自具有一组安全属性。每当主体尝试访问对象时，都会由操作系统内核强制施行授权规则——检查安全属性并决定是否可进行访问。任何主体对任何对象的任何操作都将根据一组授权规则（也称策略）进行测试，决定操作是否允许。在数据库管理系统中也存在访问控制机制，因而也可以应用强制访问控制；在此环境下，对象为表、视图、过程等</p>
+</li>
+</ul>
+<h2 id="2-SELinux相关知识"><a href="#2-SELinux相关知识" class="headerlink" title="2 SELinux相关知识"></a>2 SELinux相关知识</h2><p><strong>SELinux的策略</strong><br>SELinux的安全策略为refpolicy(reference policy)策略</p>
+<ul>
+<li><p>strict(严格的)：对每个进程都受到SELinux的控制</p>
+</li>
+<li><p>targeted(有针对性的)：用来保护常见的网络服务，仅仅是有限的进程受到SELinux控制，只监控容易被入侵的进程，rhel4只保护13个服务，rhel5保护88个服务</p>
+<ul>
+<li>rhel是Red Hat Enterprise Linux，即Red Hat公司的Linux操作系统，专门为企业所设计</li>
+</ul>
+</li>
+<li><p>minimum：修改过的targeted，只对选择的网络服务</p>
+</li>
+<li><p>mls：提供mls(多级安全保护)机制的安全性<br>ps：minimum和mls稳定性不足，未加以应用，strict不再使用，默认为targeted，但是targeted策略中开启了mls策略，如果主体和客体的安全级别相同，那么mls策略是相当于关闭的<br><strong>SELinux的工作模式</strong></p>
+</li>
+<li><p>Enforcing：强制模式，在这种模式下，SELinux被启用，并强制执行所有的安全策略规则</p>
+</li>
+<li><p>Permissive：宽容模式，在这种模式下，SELinux 被启用，但安全策略规则并没有被强制执行。当安全策略规则应该拒绝访问时，访问仍然被允许。然而，此时会向日志文件发送一条消息，表示该访问应该被拒绝，应用场景如下：</p>
+<ul>
+<li><p>审核当前的SELinux策略规则：</p>
+<ul>
+<li><p>测试新应用程序，看看将 SELinux 策略规则应用到这些程序时会有什么效果</p>
+</li>
+<li><p>解决某一特定服务或应用程序在 SELinux 下不再正常工作的故障</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Disabled：关闭模式，在这种模式下，SELinux 被关闭，默认的 DAC 访问控制方式被使用。对于那些不需要增强安全性的环境来说，该模式是非常有用的，要将SELinux工作模式设置为Disabled，需要修改SELinux配置文件，然后重启系统<br><strong>SELinux访问控制策略规则</strong><br>SELinux遵循权限最小原则，所有访问都必须明确授权。策略规则规定了哪些执行主体可以访问的目标，是最基本最重要的策略<br>Allow 规则由四部分组成：<br>源类型(Source type(s)) 通常是尝试访问进程的域类型<br>目标类型(Target type(s))  被进程访问的客体的类型<br>客体类别(Object class(es))  指定允许访问的客体的类型 如file,dir,socket等<br>许可(Pemission(s)) 象征目标类型允许源类型访问客体类型的访问种类<br>格式：<br>rule_name source_type target_type : class perm_set<br>示例：<br>allow appdomain  shell_exec:     file   {  open read  getattr  };</p>
+</li>
+</ul>
+<h2 id="3-SELinux架构"><a href="#3-SELinux架构" class="headerlink" title="3 SELinux架构"></a>3 SELinux架构</h2><p>SELinux 原来是作为一个内核补丁实现的，现在已经将 Linux 安全模块(LSM)重新实现为一个安全模块。嵌入到标准 Linux 中的方式是 LSM 提供一套钩子函数 (hook)，MAC 安全策略检查在这些钩子函数中实现。钩子函数通常放在标准 Linux 检查后、内核调用访问真实资源前调用。系统调用进入内核后，会做常规的错误检查 ( 如参数有效性等 )，然后是标准 Linux 的 DAC 检查。MAC 在这些检查都通过之后才会生效。所以，在 SELinux 中，DAC 和 MAC 同时起作用，两者并行而不悖</p>
+<ul>
+<li><p>LSM：Linux Security Modules 是内核安全模块的一套框架，一般用来做MAC控制。LSM建立在一系列的钩子函数的基础上，且必须编译进内核。SELinux是基于LSM实现的</p>
+<ul>
+<li><p>在内核安全相关的关键路径上插入了Hook点</p>
+<p>内核安全相关的关键对象有：task_struct(任务和进程)、linux_binprm(程序)、super_block(文件系统)、inode(管道、文件或者 socket套接字)、file(打开的文件)、sk_buff(网络缓冲区)、net_device(网络设备)、ker_ipc_perm(Semaphore消息，共享内存段，消息队列)、msg_msg(单个消息）</p>
+</li>
+<li><p>LSM的hook点用途</p>
+<p>流程：</p>
+<ul>
+<li><p>先通过原有的内部接口进行功能性的错误检查</p>
+</li>
+<li><p>然后进行自主访问控制DAC检查</p>
+</li>
+<li><p>调用LSM的hook函数</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>hook：钩子函数 在一定条件下才会执行的函数，将自己实现的函数挂载到挂载点上</p>
+<ul>
+<li><p>hook函数：就是我们自己实现的函数，函数类型与挂载点匹配(返回值，参数类型)</p>
+</li>
+<li><p>挂载：就是hook或者注册，使得hook函数对目标可用</p>
+</li>
+<li><p>目标挂载点：挂载hook函数的地方(在这个目标点实现自己的功能)</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>SELinux的访问控制流程<br><img src="https://img-blog.csdnimg.cn/img_convert/866f2ab4d7bfe75d724aa13e76d823ab.png" srcset="/img/loading.gif" lazyload><br>SELinux是作为LSM模块载入内核的</p>
+<ul>
+<li><p>进程通过系统调用访问资源时，进入Kernel后，先做基本的检测，如果异常直接返回</p>
+</li>
+<li><p>Linux Kernel DAC审查，有异常直接返回</p>
+</li>
+<li><p>调用Linux Kernel Modules的相关hooks，对接到SELinux的hooks，进而进行MAC验证，如果异常直接返回</p>
+</li>
+<li><p>访问真正的资源</p>
+</li>
+<li><p>返回用户态，将结果反馈<br><strong>SELinux整体架构</strong></p>
+</li>
+<li><p>SElinux安全实现中，安全服务器嵌入在内核中，策略通过 libselinux 库中包含的一系列函数从用户空间加载</p>
+<p>对象管理器和AVC驻留</p>
+<ul>
+<li><p>内核空间：对象管理用于内核服务，例如文件，目录，套接字等。通过LSM框架提供到SELinux子系统的钩子。SELinux 内核 AVC 服务用于缓存安全服务器对基于内核的对象管理器的响应，从而在将来询问相同的请求时加快访问决策</p>
+</li>
+<li><p>用户空间：这些对象管理器随需要支持 MAC 的应用程序或服务一起提供，被称为“SELinux 感知”应用程序或服务 。OM 使用 SELinux 库 (libselinux) 中内置的 AVC 服务，但如果需要，它们可以提供自己的 AVC 或根本不使用 AVC</p>
+</li>
+</ul>
+</li>
+<li><p>SELinux安全策略和配置文件包含在&#x2F;etc&#x2F;selinux目录中。此目录包含主 SELinux 配置文件 ( &#x2F;etc&#x2F;selinux&#x2F;config )，其中包含要加载的策略名称（通过SELINUXTYPE条目）和加载时策略的初始执行模式<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/NB_CoreComponents#cite_note-ftn1-1">[1]</a>（通过SELINUX入口）。&#x2F;etc&#x2F;selinux&#x2F;<SELINUXTYPE>目录包含可以与其配置文件一起激活的策略</p>
+</li>
+<li><p>SELinux 支持“模块化策略”，这意味着策略不必是一个大型源策略，而是可以从模块构建。模块化策略由包含强制性信息（例如对象类、权限等）的基本策略和零个或多个策略模块组成，其中每个模块通常都支持特定的应用程序或服务。这些模块被编译、链接并保存在“策略存储”中，在那里它们可以构建成二进制格式，然后加载到安全服务器中。二进制策略位于&#x2F;etc&#x2F; selinux&#x2F;targeted&#x2F;policy&#x2F;policy.29</p>
+</li>
+<li><p>策略源：Reference Policy Headers Reference Policy Source Custome Policy Source<br>简要介绍构成核心SELinux基础架构的主要组件。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>术语</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Access Vector(AV) 访问向量</strong></td>
+<td>表示一组权限（如打开、读取、写入）的位映射。</td>
+</tr>
+<tr>
+<td><strong>Access Vector Cache（AVC）访问向量缓存</strong></td>
+<td>存储由SELinux安全服务器做出的访问决策以供对象管理器后续使用的组件。这允许检索之前的决策，而无需重新计算开销。在核心SELinux服务中，有两个访问向量缓存：1. 代表基于内核的对象管理器缓存安全服务器的决策的一个内核值 2. 内置于libselinux中的用户空间AVC，用于在SELinux感知应用程序使用avc_open（3）与avc_has_perf（3）或avc_has_perl_noaudit（3）函数调用时缓存决策。这将节省第一次决策后的内核调用。</td>
+</tr>
+<tr>
+<td><strong>Domain 域</strong></td>
+<td>对于SELinux，这包括一个或多个与安全上下文的类型组件相关联的进程。策略中声明的类型实施规则描述了域将如何与对象交互（请参阅“对象类”）。</td>
+</tr>
+<tr>
+<td><strong>Linux Security Module（LSM）</strong></td>
+<td>提供与内核组件（例如磁盘和网络服务）挂钩的框架，安全模块（例如SELinux和SMACK）可以使用该框架执行访问控制检查。目前只能加载一个LSM模块，但正在进行堆叠多个模块的工作）。</td>
+</tr>
+<tr>
+<td><strong>Mandatory Access Control</strong></td>
+<td>一种由系统强制的访问控制机制。这可以通过“固执地”操作系统和应用（对某些人有利的糟糕的过去）或通过符合策略的策略来实现。基于策略的MAC的示例包括SELinux和SMACK。</td>
+</tr>
+<tr>
+<td><strong>Multi-Level Security (MLS)</strong></td>
+<td>基于用于机密性的贝尔-La&amp;Padula模型（BLP），例如，在“机密性”级别运行的进程可以在当前级别读&#x2F;写，但只能读&#x2F;写级别。尽管仍以这种方式使用，但它更常用于应用分离，使用多类别安全变量。</td>
+</tr>
+<tr>
+<td><strong>Object Class</strong></td>
+<td>描述资源，如文件、插槽或服务。每个“类”都有与之相关联的相关权限，例如读取、写入或导出。这允许其对象管理器对实例化对象强制访问。</td>
+</tr>
+<tr>
+<td><strong>Object Manager</strong></td>
+<td>负责标记、管理（例如创建、访问、销毁）和强制执行其控制对象的用户空间和内核组件。对象管理器根据源和目标</td>
+</tr>
+<tr>
+<td><strong>Policy</strong></td>
+<td>确定访问权限的一组规则。在SELinux中，这些规则通常使用m4（1）宏支持（例如参考策略）或新的CIL语言以内核策略语言编写。然后将该策略编译为二进制，加载到安全服务器的格式。</td>
+</tr>
+<tr>
+<td><strong>Role Based Access Control</strong></td>
+<td>SELinux用户关联到一个或多个角色，然后每个角色可能关联到一个或多个域类型。</td>
+</tr>
+<tr>
+<td><strong>Security Server</strong></td>
+<td>Linux内核中的一个子系统，代表SELinux感知应用和对象管理器做出访问决策并基于策略计算安全上下文。安全服务器不会强制实施决策，它只是说明是否根据策略允许操作。强制执行决策是SELinux感知应用程序或对象管理器的职责。</td>
+</tr>
+<tr>
+<td><strong>Security Context</strong></td>
+<td>SELinux Security Context是由以下必需组件组成的可变长度字符串：user，role，type和可选的【，range】组件。通常缩写为“context”，有时称为“a”“label”。</td>
+</tr>
+<tr>
+<td><strong>Security Identifier (SID)</strong></td>
+<td>SID是由表示安全上下文的内核Security Server和userspace AVC映射的唯一不透明整数值。内核安全服务器生成的SID是u32值，通过Linux安全模块挂钩传递到内核对象管理器或从内核对象管理器传递。</td>
+</tr>
+<tr>
+<td><strong>Type Enforcement</strong></td>
+<td>SELinux使用特定类型强制（TE）样式来实施强制访问控制。在这种情况下，所有主体和对象都有与之相关联的类型标识符，然后可以使用该标识符来强制执行策略所规定的规则。</td>
+</tr>
+<tr>
+<td><strong>Reference Policy Headers or Reference Policy Source or Custom Policy Source</strong></td>
+<td>Reference Policy Headers：在本地构建策略模块；Reference Policy Source：引用策略源；Custom Policy Source：自定义策略源</td>
+</tr>
+<tr>
+<td><strong>checkmodule</strong></td>
+<td>检查模块，策略模块编译器。将上面的源进行编译，检查安全策略模块并将其编译为二进制表示的程序。产生Policy object file</td>
+</tr>
+<tr>
+<td><strong>semodule_package</strong></td>
+<td>将策略模块和配置文件打包。生成policy file</td>
+</tr>
+<tr>
+<td><strong>semodule</strong></td>
+<td>通过安装、加载、更新、删除模块及其配套的配置文件来管理策略库。并构建二进制策略文件。</td>
+</tr>
+<tr>
+<td><strong>semanage</strong></td>
+<td>配置登录，用户，端口的策略元素</td>
+</tr>
+<tr>
+<td><strong>Userspace Object Managers</strong></td>
+<td>用户空间对象管理器</td>
+</tr>
+<tr>
+<td><strong>Linux commands</strong></td>
+<td>修改支持SELinux的命令，ls,ps,pam</td>
+</tr>
+<tr>
+<td><strong>policycoreutils</strong></td>
+<td>策略核心工具，SELinux的工具，secon，audit2allow，system-config-selinux</td>
+</tr>
+<tr>
+<td><strong>File Labeling Utilities</strong></td>
+<td>文件标签实用工具，初始化或更新文件安全上下文，setfiles，restorecon</td>
+</tr>
+<tr>
+<td><strong>libselinux</strong></td>
+<td>SELinux的共享库，提供了安全策略，xattr文件属性(文件系统的扩展属性)</td>
+</tr>
+<tr>
+<td><strong>SELinux Configuration Files</strong></td>
+<td>配置文件</td>
+</tr>
+<tr>
+<td><strong>SELinux Policy</strong></td>
+<td>Policy Store：策略存储 Active Policy：生效的策略</td>
+</tr>
+</tbody></table>
+<p><strong>SELinux核心组件</strong></p>
+<ul>
+<li><p>主体请求访问</p>
+</li>
+<li><p>对象管理器 知道它管理哪些对象，查询该请求是否允许，然后强制执行安全策略决策</p>
+</li>
+<li><p>进入AVC(存储安全服务器的决策信息)中进行查询</p>
+<ul>
+<li><p>如果缓存中有相应的允许请求的决策信息，则返回结果到对象管理器</p>
+</li>
+<li><p>如果缓存中没有相应的允许请求的决策信息，则询问安全服务器</p>
+</li>
+</ul>
+</li>
+<li><p>安全服务器中包含安全策略，当缓存中没有相应的允许请求的决策信息而对安全服务器进行询问的时候，安全服务器会基于安全策略进行决策，将结果添加到缓存，再由缓存返回结果给对象管理器</p>
+</li>
+</ul>
+<p><strong>规则如何生效</strong></p>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Kernel Service</strong></td>
+<td>内核资源，包括文件，套接字和内存。需要有访问决策才能对其进行管理</td>
+</tr>
+<tr>
+<td><strong>SELInux Security Module</strong></td>
+<td>SElinux访问决策和内核资源的主要接口，担任资源对象管理器</td>
+</tr>
+<tr>
+<td><strong>NetLink Service</strong></td>
+<td>通过libselinux管理资源的策略来更新通知</td>
+</tr>
+<tr>
+<td><strong>Conditional AV table</strong></td>
+<td>条件访问向量表，支持布尔语句类型，保存条目</td>
+</tr>
+<tr>
+<td><strong>Constraints Table</strong></td>
+<td>约束表</td>
+</tr>
+<tr>
+<td><strong>AV table</strong></td>
+<td>访问向量表</td>
+</tr>
+<tr>
+<td><strong>SID &amp; Context Tables</strong></td>
+<td>存SID和上下文的表</td>
+</tr>
+</tbody></table>
+<h2 id="4-SELinux配置文件"><a href="#4-SELinux配置文件" class="headerlink" title="4 SELinux配置文件"></a>4 SELinux配置文件</h2><p><strong>全局配置文件</strong></p>
+<p>影响活动策略及支持SELinux感知应用程序、实时程序或命令</p>
+<ul>
+<li><p>&#x2F;etc&#x2F;selinux&#x2F;config：定义要激活的策略及其执行模式，如果该文件丢失，那么不会加载SELinux策略</p>
+</li>
+<li><p>&#x2F;etc&#x2F;selinux&#x2F;semanage.conf：SELinux 策略配置子系统将其用于模块化或 CIL 策略</p>
+</li>
+<li><p>&#x2F;etc&#x2F;selinux&#x2F;restorecond.conf and restorecond-user.conf：restorecond.conf 文件包含可能由具有不正确安全上下文的应用程序创建的文件列表。<strong>restorecond</strong> (8) 守护进程将监视它们的创建，并自动将其安全上下文更正为活动策略文件上下文配置文件（位于 &#x2F;etc&#x2F;selinux&#x2F;<policy_name>&#x2F;contexts&#x2F;files 目录中）指定的安全上下文</p>
+</li>
+<li><p>&#x2F;etc&#x2F;selinux&#x2F;newrole_pam.conf：使用可选的newrole_pam.conf文件并将应用程序或命令映射到<strong>PAM</strong> (8)配置文件。每行包含可执行文件名，后跟&#x2F;etc&#x2F;pam.d中存在的pam配置文件的名称</p>
+</li>
+<li><p>&#x2F;etc&#x2F;sestatus.conf： 文件列出在使用 -v 标志 (sestatus -v) 时应显示其安全上下文的文件和进程</p>
+</li>
+<li><p>&#x2F;etc&#x2F;security&#x2F;sepermit.conf：pam_sepermit.so模块使用<strong>sepermit.conf</strong> (5) 文件来允许或拒绝用户登录，具体取决于 SELinux 是否执行策略</p>
+</li>
+</ul>
+<p><strong>策略存储配置文件</strong></p>
+<p>私有的，由semanage和semodule命令管理，用于构建大部分策略配置文件</p>
+<ul>
+<li><p>modules&#x2F;active&#x2F;base.pp：pam_sepermit.so模块使用<strong>sepermit.conf</strong> (5) 文件来允许或拒绝用户登录，具体取决于 SELinux 是否执行策略</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;base.linked：这仅在 save-linked 设置为TRUE时出现，如<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/GlobalConfigurationFiles#.2Fetc.2Fselinux.2Fsemanage.conf_File" title="全局配置文件">&#x2F;etc&#x2F;selinux&#x2F;semanage.conf</a>部分所述。它包含已使用<strong>semodule_link</strong> (8)命令链接的模块</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;commit_num：这是 libsemanage 用于管理存储更新的二进制文件。该格式与政策构建无关</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;file_contexts.template：这包含从<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyStoreConfigurationFiles#modules.2Factive.2Fbase.pp">base.pp</a>和<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyStoreConfigurationFiles#modules.2Factive.2Fmodules_Directory_Contents">modules&#x2F;active&#x2F;modules</a>目录中的可加载模块中提取的所有模块“标签策略文件”条目（例如 <module_name>.fc 文件）的副本</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;file_contexts：该文件成为策略<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyConfigurationFiles#contexts.2Ffiles.2Ffile_contexts" title="策略配置文件">contexts&#x2F;files&#x2F;file_contexts文件，并由</a><a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyStoreConfigurationFiles#modules.2Factive.2Ffile_contexts.template">modules&#x2F;active&#x2F;file_contexts.template</a>文件中的条目构建，文件标记实用程序使用它来确保根据策略标记文件和目录</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;homedir_template：</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;file_contexts.homedirs：在构建策略时，此文件将成为策略<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyConfigurationFiles#contexts.2Ffiles.2Ffile_contexts.homedirs" title="策略配置文件">contexts&#x2F;files&#x2F;file_contexts.homedirs文件，如</a><a target="_blank" rel="noopener" href="http://selinuxproject.org/~rhaines/NB4-diagrams/25-file_contexts.png">文件上下文配置文件</a>图中所示。然后文件标记实用程序使用它来确保根据策略标记用户主目录区域</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;netfilter_contexts &amp; netfilter.local：</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;policy.kern：这是由<strong>semanage</strong> (8) 或<strong>semodule</strong> (8) 命令（取决于配置操作）构建的二进制策略文件，然后成为要加载到内核中的二进制策略</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;seusers.final and seusers：seusers.final 文件将 GNU &#x2F; Linux 用户映射到 SELinux 用户，并成为<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyConfigurationFiles#seusers" title="策略配置文件">seusers部分中讨论的策略 seusers</a> <a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyStoreConfigurationFiles#cite_note-ftn36-3">[3]</a>文件</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;users_extra, users_extra.local and users.local：users_extra 和 users_extra.local 文件用于将前缀映射到用户主目录，如<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyStoreConfigurationFiles#modules.2Factive.2Ffile_contexts.template">modules&#x2F;active&#x2F;file_contexts.template</a>文件部分所述，用于替换 ROLE 关键字。前缀链接到 SELinux 用户 ID，应该反映用户角色</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;booleans.local：该文件由semanage boolean命令创建和更新，并根据请求保存布尔值</p>
+</li>
+<li><p>mod</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;file_contexts.local：该文件由 semanage fcontext 命令创建和更新。它用于保存核心策略未交付的文件和目录的文件上下文信息（即它们未在基本模块和可加载模块中交付的任何 *.fc 文件中定义）。</p>
+<p>semanage 命令会将信息添加到策略存储 file_contexts.local 文件中，然后将此文件复制到 .&#x2F;contexts&#x2F;files&#x2F;file_contexts.local 文件中，运行文件上下文实用程序时将使用该文件</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;interfaces.local：该文件由 semanage interface 命令创建和更新，以保存核心策略未传递的网络接口信息（即它们未在 base.conf 文件中定义）</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;nodes.local File：该文件由 semanage node 命令创建和更新，以保存核心策略未传递的网络地址信息（即它们未在 base.conf 文件中定义）</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;ports.local File：该文件由 semanage port 命令创建和更新，以保存核心策略未传递的网络端口信息（即它们未在 base.conf 文件中定义）</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;preserve_tunables：仅当策略构建指定应保留可调参数时，此文件才会存在，如果是这样，它们将由策略构建过程转换为布尔值</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;disable_dontaudit：仅当策略构建指定应禁用 <a target="_blank" rel="noopener" href="http://selinuxproject.org/page/AVCRules#dontaudit" title="AVCR 规则">dontaudit</a>规则时，此文件才会存在</p>
+</li>
+<li><p>modules&#x2F;active&#x2F;modules Directory Contents：此目录包含可加载模块（<module_name>.pp 或禁用时<module_name>.pp.disabled），这些模块已由 semodule_package 命令构建并由 semodule 或semanage module -a命令放置在存储区中</p>
+</li>
+</ul>
+<p><strong>策略配置文件</strong></p>
+<ul>
+<li>seusers：<strong>seusers</strong> (5)文件由登录程序（通常通过libselinux库）使用，并将 GNU &#x2F; Linux 用户（在user &#x2F; passwd文件中定义）映射到 SELinux 用户（在策略中定义）</li>
+<li>booleans and booleans.local：<strong>通常，如果semanage</strong> (8)用于管理布尔值，则这些<strong>布尔值</strong>(5)文件不存在（请参阅 modules&#x2F;active&#x2F;booleans.local 文件部分）。但是，如果没有使用semanage或者有一个支持 SELinux 的应用程序使用下面列出的libselinux函数，那么这些文件可能存在（它们也可能存在于较旧的参考策略中）</li>
+<li>booleans.subs_dist：booleans.subs_dist文件（如果存在）将允许将新的布尔名称分配给活动策略中的名称。添加此文件是因为许多较旧的布尔值以“允许”开头，这使得很难确定它们做了什么</li>
+<li>setrans.conf：setrans.conf (8)文件由<strong>mcstransd</strong> (8) 守护程序（在 mcstrans rpm 中可用）使用。该守护程序使 SELinux 感知应用程序能够将 MCS&#x2F;MLS 内部策略级别转换为用户友好的标签</li>
+<li>secolor.conf：当SELinux 颜色感知应用程序显示信息时， <strong>secolor.conf</strong> (5) 文件控制与上下文组件相关联的颜色（目前没有，尽管在libselinux&#x2F;examples下的 Notebook 源 tarball 中有两个示例目录）</li>
+<li>policy&#x2F;policy[ver]：这是加载到内核中以强制执行策略的二进制策略文件，由 checkpolicy 或 semodule 构建</li>
+<li>contexts&#x2F;customizable_types：Customized_types (5) 文件包含不会被<strong>setfiles</strong> (8) 或<strong>restorecon</strong> (8) 命令重新标记的类型列表。这些命令在重新标记之前检查此文件并排除列表中的那些，除非使用 -F 标志</li>
+<li>contexts&#x2F;default_contexts：需要为用户进程（通常是登录应用程序）设置安全上下文的 SELinux 感知应用程序使用 default_contexts (5) 文件</li>
+<li>contexts&#x2F;dbus_contexts：该文件用于 dbus 消息传递服务守护进程（IPC 的一种形式），许多 GNU &#x2F; Linux 应用程序（例如 GNOME 和 KDE 桌面）使用该守护进程。如果启用了 SELinux，则需要存在此文件才能使这些应用程序正常工作</li>
+<li>contexts&#x2F;default_type：<strong>default_type</strong> (5) 文件允许 SELinux 感知应用程序（例如<strong>newrole</strong> (1)）选择角色的默认类型</li>
+<li>contexts&#x2F;failsafe_context：当登录进程无法确定要使用的默认上下文时，使用<strong>failsafe_context (5)。</strong>然后，文件内容将用于允许管理员访问系统</li>
+<li>contexts&#x2F;initrc_context File：<strong>run_init</strong> (8) 命令使用它来允许系统服务在与 init 相同的安全上下文中启动。其他支持 SELinux 的应用程序也可以出于相同目的使用此文件</li>
+<li>contexts&#x2F;lxc_contexts File：该文件支持在libvirt库中标记 lxc 容器（参见 libvirt 源代码src&#x2F;security&#x2F;security_selinux.c）</li>
+<li>contexts&#x2F;netfilter_contexts：此文件将支持网络数据包的 Netfilter &#x2F; iptable 规则匹配的 Secmark 标记</li>
+<li>contexts&#x2F;removable_context：可<strong>移动</strong>上下文(5) 文件包含一个默认标签，该标签应用于未在<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyConfigurationFiles#contexts.2Ffiles.2Fmedia">上下文&#x2F;文件&#x2F;媒体</a>文件中定义的可移动设备</li>
+<li>contexts&#x2F;securetty_types：<strong>newrole</strong> (1) 命令使用<strong>securetty_types</strong> (5) 文件来查找在更改角色或级别时与tty 设备一起使用的类型</li>
+<li>contexts&#x2F;sepgsql_contexts：该文件包含 SE-PostgreSQL 数据库对象的默认安全上下文，并在<strong>selabel_db</strong> (5)中进行了描述</li>
+<li>contexts&#x2F;systemd_contexts：该文件当前未在 F-20 中使用，但似乎包含文件上下文，供后续版本中通过<strong>systemd</strong> (8)运行的任务使用</li>
+<li>contexts&#x2F;userhelper_context：此文件包含 system-config-* 应用程序从 root 运行时使用的默认安全上下文</li>
+<li>contexts&#x2F;virtual_domain_context：<strong>virtual_domain_context</strong> (5) 文件由虚拟化 API ( libvirt ) 使用，并提供策略中可用的 qemu 域上下文，此文件中可能有两个条目，第二个条目是替代域上下文</li>
+<li>contexts&#x2F;virtual_image_context：<strong>virtual_image_context</strong> (5) 文件由虚拟化 API ( libvirt ) 使用，并提供策略中可用的图像上下文，第一个条目是图像文件上下文，第二个条目是图像内容上下文</li>
+<li>contexts&#x2F;x_contexts：x_contexts (5) 文件<strong>为</strong>X-Windows SELinux 安全扩展提供默认的安全上下文</li>
+<li>contexts&#x2F;files&#x2F;file_contexts：<strong>file_contexts</strong> (5) 文件由semodule <strong>(</strong> 8) 和<strong>semanage</strong> (8) 命令<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyConfigurationFiles#cite_note-ftn39-1">[1]</a>随着策略的更新（添加或删除模块或更新基础）进行管理，因此不应编辑</li>
+<li>contexts&#x2F;files&#x2F;file_contexts.local：该文件由 semanage fcontext 命令添加，如<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyStoreConfigurationFiles#modules.2Factive.2Ffile_contexts.local_File" title="策略存储配置文件">modules&#x2F;active&#x2F;file_contexts.local</a>文件部分所述，以允许正确标记本地定义的文件</li>
+<li>contexts&#x2F;files&#x2F;file_contexts.homedirs：此文件由<strong>semodule</strong> (8) 和<strong>semanage</strong> (8) 命令在策略更新（添加或删除用户和模块或更新基础）时管理，因此不应编辑，它由<strong>genhomedircon</strong> (8) 命令（实际上是由重建策略的 semodule -Bn）生成，用于在用户主目录和文件上设置正确的上下文</li>
+<li>contexts&#x2F;files&#x2F;file_contexts.subs and file_contexts.subs_dist：这些文件允许为libselinux函数<strong>matchpatchcon</strong> (3)和<strong>selabel_lookup</strong> (3)替换文件名（用于本地使用的.subs和用于 GNU&#x2F;Linux 发行版的.subs_dist ） 。<strong>file_contexts</strong> (5) 手册页也描述了这个文件</li>
+<li>contexts&#x2F;files&#x2F;media：<strong>媒体</strong>(5) 文件用于将媒体类型映射到文件上下文。如果在此文件中找不到 media_id，则使用<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyConfigurationFiles#contexts.2Fremoveable_contexts">contexts&#x2F;removable_contexts</a>中的默认上下文</li>
+<li>contexts&#x2F;users&#x2F;[seuser_id]：这些可选文件以其代表的 SELinux 用户命名。<a target="_blank" rel="noopener" href="http://selinuxproject.org/page/PolicyConfigurationFiles#contexts.2Fdefault_contexts">每个文件具有与contexts&#x2F;default_contexts</a>文件相同的格式，用于为 SELinux 用户分配正确的上下文（通常在登录期间）</li>
+<li>logins&#x2F;<linuxuser_id>：这些可选文件由支持 SELinux 的登录应用程序（例如 PAM）使用（使用pam_selinux模块）根据 GNU&#x2F;Linux 登录 ID 和服务名称获取 SELinux 用户名和级别</li>
+<li>users&#x2F;local.users：通常，如果使用<strong>semanage</strong> (8)管理用户，则<strong>local.users</strong> (5) 文件不存在，但是如果不使用<strong>semanage</strong>，则该文件可能存在（它也可能存在于较旧的参考或示例策略中）</li>
+</ul>
+<p><strong>策略存储迁移</strong></p>
+<p>升级库后，必须先迁移所有策略存储，然后才能执行任何修改或使用存储的命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">编译并安装一个用内核语言编写的基本模块和两个模块：</span><br>checkmodule -o base.mod base.conf <br>semodule_package -o base.pp -m base.mod -f base.fc <br>checkmodule -m ext_gateway.conf -o ext_gateway.mod <br>semodule_package -o ext_gateway.pp -m ext_gateway.mod -f gateway.fc <br>checkmodule -m int_gateway.conf -o int_gateway.mod <br>semodule_package -o int_gateway.pp -m int_gateway.mod <br>semodule -s 模块化测试 --priority 100 -i base.pp ext_gateway.pp int_gateway.pp <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">编译并安装一个用 CIL 编写的更新模块：&gt;</span> <br>semodule -s modules-test --priority 400 -i custom/int_gateway.cil <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">显示模块的完整列表：</span><br>semodule -s modules -test --list-modules=full <br>400 int_gateway cil<br>100 base pp <br>100 ext_gateway pp <br>100 int_gateway pp <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">显示模块的标准列表：</span><br>semodule -s modules-test --list-modules=standard <br>base <br>ext_gateway <br>int_gateway<br></code></pre></td></tr></table></figure>
+
+
+<p><strong>优先选项</strong></p>
+<p>优先级允许策略存储中存在多个具有相同名称的模块，较高优先级的模块包含在二进制文件中，所有较低优先级的同名模块都将被忽略</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">semodule --priority 100 --install 分发/apache.pp <br>semodule --priority 400 --install custom/apache.pp<br></code></pre></td></tr></table></figure>
+
+
+<p>两个 apache 模块都作为“apache”安装在策略库中，但最终内核二进制文件中只包含自定义 apache 模块。分发 apache 模块被忽略。–list -modules选项可用于显示这些：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">显示完整的模块列表：</span><br>semodule --list-modules=full <br>400 apache pp <br>100 base pp <br>100 apache pp <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">显示标准的模块列表：</span><br>semodule --list-modules=standard <br>base <br>apache<br></code></pre></td></tr></table></figure>
+
+
+<p><strong>将策略包转换为CIL</strong></p>
+<p>更新的一个组成部分是添加将编译的策略模块（称为策略包或*.pp文件）转换为 CIL 格式的工具。这是通过位于&#x2F;usr&#x2F;libexec&#x2F;selinux&#x2F;hll&#x2F;pp的pp到 CIL 高级语言转换实用程序来实现的</p>
+<p>CIL：通用中间语言，属于通用语言基础架构和.NET框架的低阶的人类可读的编程语言，它是一种代码指令集。CIL可以在任何支持CIL的环境中运行，如果想让一份代码在不同的平台中运行，需要将代码的编译分成两部分</p>
+<ul>
+<li><p>把源代码编译成CIL的预编译过程（其实之后CIL还会被编译成一种位元码(一个程序处理的电脑目标代码)，生成一个CLI Assembly）</p>
+</li>
+<li><p>运行时把CIL（其实是CLI Assembly）编译成本地指令的即时编译过程</p>
+</li>
+</ul>
+<p>CIL是基于堆栈的，运行在虚拟机上</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat module_name.pp | /usr/libexec/selinux/hll/pp &gt; module_name.cil<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SELinux/" class="category-chain-item">SELinux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SELinux简介</div>
+      <div>http://example.com/2025/05/13/SELinux简介/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 13, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/12/hello-world/" title="Hello World">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
