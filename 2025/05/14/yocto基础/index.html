@@ -1,0 +1,640 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Yocto环境配置和Linux开发环境配置yocto：一个能够让开发这制作自定义Linux镜像的项目OpenEmbedded：包含核心元数据层和BitBake构建工具，BitBake是任务执行程序和调度程序，它是OpenEmbedded构建系统的核心。OpenEmbedded-Core（OE-Core）元数据，其中包括共享配置，全局变量定义，共享类，包装和配方。其中，类定义了构建逻辑的封装和继承。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="yocto基础">
+<meta property="og:url" content="http://example.com/2025/05/14/yocto%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Yocto环境配置和Linux开发环境配置yocto：一个能够让开发这制作自定义Linux镜像的项目OpenEmbedded：包含核心元数据层和BitBake构建工具，BitBake是任务执行程序和调度程序，它是OpenEmbedded构建系统的核心。OpenEmbedded-Core（OE-Core）元数据，其中包括共享配置，全局变量定义，共享类，包装和配方。其中，类定义了构建逻辑的封装和继承。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-14T11:45:16.000Z">
+<meta property="article:modified_time" content="2025-05-14T11:46:01.556Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>yocto基础 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="yocto基础"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-14 19:45" pubdate>
+          May 14, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">yocto基础</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Yocto环境配置和Linux开发环境配置<br>yocto：一个能够让开发这制作自定义Linux镜像的项目<br>OpenEmbedded：包含核心元数据层和BitBake构建工具，BitBake是任务执行程序和调度程序，它是OpenEmbedded构建系统的核心。<br>OpenEmbedded-Core（OE-Core）元数据，其中包括共享配置，全局变量定义，共享类，包装和配方。其中，类定义了构建逻辑的封装和继承。配方是要构建的软件和图像的逻辑单元<br>Poky：既是Yocto的构建示例也是一套构建工具，Poky是位于OE-Core之上的集成层。<br>meta-poky，这是特定于Poky的元数据。<br>meta-yocto-bsp，这是Yocto项目特定的basic支持包(BSP)<br>BitBake：通用的任务执行引擎，允许shell和python任务在复杂的任务间相关性约束内高效且并行的运行。其主要用户之一OpenEmbedded以此内核为基础，并使用面向任务的方法构建嵌入式Linux软件堆栈<br>BitBake根据提供的构成任务的元数据执行任务：元数据存储在配方（.bb）和相关的配方“追加”（.bbappend）文件，配置（.conf）和基础包含（.inc）文件以及类（.bbclass）文件中。<br>元数据向BitBake提供有关要运行哪些任务以及这些任务之间的依赖关系的说明<br>BitBake包含一个提取程序库，用于从各个地方(本地文件，源代码控制系统或网站)获取源代码<br>每个要构建的单元的指令（例如，一个软件）被称为“配方”文件，其中包含有关该单元的所有信息（依赖项，源文件位置，校验和，描述等）<br>BitBake包括客户端&#x2F;服务器抽象，可以从命令行使用，也可以通过XML-RPC用作服务，并且具有多个不同的用户界面<br>yocto的工作流程<br>了解Yocto Project工作流非常重要，因为它可以帮助您查明发生问题的位置以及构建的中断方式。 工作流分为以下步骤：<br>开发人员指定架构，策略，补丁和配置详细信息。<br>构建系统从指定的位置获取并下载源代码。该项目支持标准方法（例如tarball）或源代码存储库系统（例如git）。<br>将源提取到本地工作区中，在该工作区中将应用补丁，并且将运行用于配置和编译软件的常见步骤。<br>将软件安装到临时暂存区域，在该区域中，您选择的二进制软件包格式（deb，rpm或ipk）将用于汇总软件。<br>在整个构建过程中都会运行不同的质量检查和健全性检查。<br>创建二进制文件后，将生成二进制程序包提要，然后将其用于创建最终的根文件映像。<br>生成文件系统映像<br>yocto相关术语：<br>配置文件：包含全局定义变量，用户定义变量和硬件配置信息。<br>配置文件告诉构建系统需要构建什么，什么需要放入镜像，以支持哪个特定平台<br>配方Recipe：<br>Recipe可以包含一列用来构建二进制镜像文件的设定和任务（指令）。<br>Recipe描述了你从哪获取代码，需要应用哪个（代码）补丁。同时Recipe还描述了对于其他Recipe或库的依赖，以及配置和编译选项。Recipe存放在Layer中<br>层Layer：相关Recipe的集合<br>Layer允许你将元数据（metadata）集合在一起，自定义你的构建。有时候你的构建是可以支持多种不同架构的，那么这种数据，可以通过Layer方式将它们独立出来<br>元数据Metadata：Yocto Project在构建Linux发行版本时，构建系统会解析的文件（数据），Metadata是Yocto Project中很关键的一个元素。通常来说，元数据包含recipe，配置文件，，其他参考构建指令的信息，以及控制构建什么&#x2F;如何构建（what and how）的数据。元数据也包括命令（command），软件版本信息，从何处获取，其他用来做补丁的文件或是特定场景下需要自定义软件的信息。OpenEmbedded Core是重要的一组被验证过的元数据<br>OpenEmbedded-Core：OE-Core是基础recipe，类文件，和相关文件的元数据组合，在基于OpenEmbedded的系统中很常用，Yocto Project也使用它。OE-Core由OpenEmbedded社区将其开发的原始仓库取其核心，充分验证过的recipe的集合而形成的关键核心<br>Poky：一个参考嵌入式发行版本，同样也用来作为提供基本功能的发行，可以用来说明（学习）如何自定义发行版本，可以测试Yocto Project组件，还可以为用户下载Yocto Project。 Poky不是产品级的，但它是一个很好的定制化工作起点。Poky是在OE-Core上层的一个Layer集成<br>构建系统BitBake：调度表和执行引擎，用来解析指令（recipe）和配置数据 然后它创建依赖树，安排编译，调度编译，最后执行定制化Linux镜像&#x2F;发行版本的构建。BitBake是类似Make的一个构建工具。BitBake recipe指定一个特定包是如何被构建的，包括所有包的依赖，源代码路径，配置，编译，构建，安装，和移除指令。Recipe也在标准变量中存储包的元数据。相关Recipe形成一个Layer。构建过程中，追踪依赖，执行编译或交叉编译。作为交叉构建的第一步，矿界首先创建适用于目标平台的eSDK套装<br>包packages：构建系统的输出，用来创建最终的镜像<br>Extensible Software Development Kit(ESDK)：一个自定义的SDK，应用开发者可以用来将他们的库和代码改动写入镜像，为其他应用开发者提供代码<br>镜像image：加载到设备上的Linux发行版本（操作系统）的二进制形式<br>配置文件:<br>包含全局定义变量，用户定义变量和硬件配置信息。配置文件告诉构建系统需要构建什么，什么需要放入镜像，以支持一个特定平台。后缀为.conf的文件，定义指示构建过程的各种变量值。其中包括：machine配置选项、distribution配置选项、compiler优化选项、通用配置选项和用户配置选项，该类文件只对变量进行赋值，主配置文件为conf&#x2F;local.conf文件。<br>第一步Poky就会从local.conf开始，一路向下，一级一级配置，直到配置到和rootfs有关的那一堆.bb配方文件，最终形成完整完全的配方；<br>然后获取配方需要的资源，比如各种软件包，比如kernel的源码；<br>最后把所有的资源编译出我们需要的镜像。<br>类classes：<br>后缀为.bbclass的文件，包含元数据文件之间的共享数据。通常bitbake&#x2F;class&#x2F;目录下面包含一个base.bbclass，会自动被工程中所有的recipe和class所包含(include、require、inherit)。base.bbclass包含了基本任务的定义，如代码获取、解包、配置(默认为空)、编译(基于任何当前支持的makefile)、安装和打包(两项默认为空)。这些基本任务可以被继承的class或recipe所重写&#x2F;扩展。<br>配方Recipe:<br>后缀为.bb的文件<br>有关软件包的描述性信息（作者，主页，许可证等）<br>现有依赖关系（构建和运行时依赖关系）<br>源代码所在的位置以及如何获取它<br>源代码是否需要任何补丁，在哪里可以找到它们以及如何应用它们<br>如何配置和编译源代码<br>如何将生成的工件组装到一个或多个可安装的程序包中<br>在目标计算机上的哪个位置安装软件包或创建的软件包<br>配方append：<br>后缀为.bbappend的文件，实现对recipe文件的重写&#x2F;扩展。.bbappend文件总是与一个现存的.bb文件(同名)相对应。如：当不同的machine layer对GUI layer进行引用时，可以使用与GUI layer中同名的.bbappend文件对GUI layer的功能进行不同的定制，而不需要去修改原GUI layer中的内容。<br>层Layer:<br>相关Recipe的集合。Layer允许你将元数据（metadata）集合在一起，自定义你的构建。有时候你的构建是可以支持多种不同架构的，那么这种数据，可以通过Layer方式将它们独立出来。将不同的目标实现隔离，实现功能模块化。例如构建适用于两种不同machine的img，可以将两种machine的配置分别置于不同的layer，使得在构建过程中不会相互影响。再比如，一个基本功能的实现也可以设定为单独一个layer，如GUI layer，可以被当作模块被任何其他layer使用。<br>构建系统 - “Bitbake”:<br>调度表和执行引擎，用来解析指令（recipe）和配置数据。然后它创建依赖树，安排编译，调度编译，最后执行定制化Linux镜像&#x2F;发行版本的构建。BitBake是类似Make的一个构建工具。BitBake recipe指定一个特定包是如何被构建的，包括所有包的依赖，源代码路径，配置，编译，构建，安装，和移除指令。Recipe也在标准变量中存储包的元数据。相关Recipe形成一个Layer。构建过程中，追踪依赖，执行编译或交叉编译。作为交叉构建的第一部，矿界首先创建适用于目标平台的eSDK套装。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Yocto/" class="category-chain-item">Yocto</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>yocto基础</div>
+      <div>http://example.com/2025/05/14/yocto基础/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 14, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/05/14/Docker%E5%9F%BA%E7%A1%80/" title="Docker基础">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Docker基础</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/13/SELinux%E7%AE%80%E4%BB%8B/" title="SELinux简介">
+                        <span class="hidden-mobile">SELinux简介</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

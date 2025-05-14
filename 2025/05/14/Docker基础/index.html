@@ -1,0 +1,671 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。 应用场景Web 应用的自动化打包和发布。自动化测试和持续集成、发布。在服务型环境中部署和调整数据库或其他的后台应用。从头编译或者扩展现有的 OpenShift 或 Cloud Foundry 平台来搭建自己的 PaaS (提供公共的中间件、数据库、缓存等，减">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker基础">
+<meta property="og:url" content="http://example.com/2025/05/14/Docker%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。 应用场景Web 应用的自动化打包和发布。自动化测试和持续集成、发布。在服务型环境中部署和调整数据库或其他的后台应用。从头编译或者扩展现有的 OpenShift 或 Cloud Foundry 平台来搭建自己的 PaaS (提供公共的中间件、数据库、缓存等，减">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-14T11:46:19.000Z">
+<meta property="article:modified_time" content="2025-05-14T11:46:53.094Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Docker基础 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Docker基础"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-14 19:46" pubdate>
+          May 14, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          15 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Docker基础</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。</p>
+<p>应用场景<br>Web 应用的自动化打包和发布。<br>自动化测试和持续集成、发布。<br>在服务型环境中部署和调整数据库或其他的后台应用。<br>从头编译或者扩展现有的 OpenShift 或 Cloud Foundry 平台来搭建自己的 PaaS (提供公共的中间件、数据库、缓存等，减少公司维护成本和安全风险，专注业务应用程序的实现。)环境。</p>
+<p>Docker三个基本概念<br>1）image镜像<br>docker镜像就是一个只读模板，比如，一个镜像可以包含一个完整的centos，里面仅安装apache或用户的其他应用，镜像可以用来创建docker容器，另外docker提供了一个很简单的机制来创建镜像或者更新现有的镜像，用户甚至可以直接从其他人那里下一个已经做好的镜像来直接使用<br>2）container容器<br>docker利用容器来运行应用，容器是从镜像创建的运行实例，它可以被启动，开始、停止、删除、每个容器都是互相隔离的，保证安全的平台，可以吧容器看做是要给简易版的linux环境（包括root用户权限、镜像空间、用户空间和网络空间等）和运行再其中的应用程序<br>3）repostory仓库<br>仓库是集中存储镜像文件的仓库，registry是仓库主从服务器，实际上参考注册服务器上存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）。<br>Docker架构<br>docker daemon就是docker的守护进程即server端，可以是远程的，也可以是本地的<br>docker cli 用来管理容器和镜像，客户端提供一个只读镜像，然后通过镜像可以创建多个容器</p>
+<p>Docker安装、启动<br>CE为社区版，EE为企业版<br>yum list | grep docker<br>docker-ce.x86_64                                                  3:20.10.0-3.el8                                        Thirdpart<br>docker-ce-cli.x86_64                                              1:20.10.0-3.el8                                        Thirdpart<br>docker-ce-rootless-extras.x86_64                                  20.10.0-3.el8                                          Thirdpart<br>pcp-pmda-docker.x86_64                                            5.2.5-4.el8                                            Base<br>podman-docker.noarch                                              3.2.3-0.11.el8                                         Base<br>python-docker-tests.noarch                                        5.0.0-2.el8                                            Base<br>python2-dockerpty.noarch                                          0.4.1-18.el8                                           Base<br>python3-docker.noarch                                             5.0.0-2.el8                                            Base<br>python3-dockerpty.noarch                                          0.4.1-18.el8                                           Base<br>standard-test-roles-inventory-docker.noarch                       4.10-1.el8                                             Base       </p>
+<h1 id="yum会安装docker依赖"><a href="#yum会安装docker依赖" class="headerlink" title="yum会安装docker依赖"></a>yum会安装docker依赖</h1><p>yum install docker-ce.x86_64</p>
+<p>yum install docker-ce.x86_64<br>                                                                                              10&#x2F;10<br>Installed products updated.</p>
+<p>已安装:<br>  container-selinux-2:2.158.0-1.el8.noarch        containerd.io-1.4.3-3.1.el8.x86_64  docker-ce-3:20.10.0-3.el8.x86_64  docker-ce-cli-1:20.10.0-3.el8.x86_64<br>  docker-ce-rootless-extras-20.10.0-3.el8.x86_64  fuse-overlayfs-1.6-1.el8.x86_64     fuse3-3.2.1-12.el8.x86_64         fuse3-libs-3.2.1-12.el8.x86_64<br>  libslirp-4.3.1-1.el8.x86_64                     slirp4netns-1.1.8-1.el8.x86_64   </p>
+<p>启动docker服务<br>systemctl start docker</p>
+<p>常用Docker命令<br>1、docker ps -a 查看所有容器<br>docker ps -a<br>CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</p>
+<p>CONTAINER ID:容器的ID<br>IMAGE:使用的镜像<br>COMMAND:启动容器时运行的命令<br>CREATED:容器创建的时间<br>STATUS:容器的状态<br>    created：已创建<br>    restarting：重启中<br>    running：运行中<br>    removing：迁移中<br>    paused：暂停<br>    exited：停止<br>    dead：死亡<br>PORTS:实际运行端口，若有指定运行端口则会显示指定的端口和默认运行端口，以及连接类型（ tcp &#x2F; udp ）<br>NAMES:容器名字</p>
+<p>docker ps -l查看最后一次创建的容器<br>2、docker pull image_name 下载docker镜像<br>docker pull hello-world<br>Using default tag: latest<br>Error response from daemon: Get <a target="_blank" rel="noopener" href="https://registry-1.docker.io/v2/">https://registry-1.docker.io/v2/</a>: net&#x2F;http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)<br>出现如下问题可参考如下方法</p>
+<p>cat  &#x2F;etc&#x2F;systemd&#x2F;system&#x2F;docker.service.d&#x2F;http-proxy.conf<br>[Service]<br>Environment&#x3D;”HTTPS_PROXY&#x3D;<a target="_blank" rel="noopener" href="http://proxyxa.zte.com.cn/">http://proxyxa.zte.com.cn:80</a>“                                                                                                               </p>
+<p>Environment&#x3D;”HTTP_PROXY&#x3D;”<a target="_blank" rel="noopener" href="http://proxyxa.zte.com.cn/">http://proxyxa.zte.com.cn:80</a>“                                                                                                                 </p>
+<p>Environment&#x3D;”NO_PROXY&#x3D;”localhost,127.0.0.1,$USERDNSDOMAIN”</p>
+<p>#下载指定版本镜像可以使用如下命令<br>docker pull mysql:8.0<br>docker run -it mysql:8.0 mysql -V<br>mysql  Ver 8.0.36 for Linux on x86_64 (MySQL Community Server - GPL)</p>
+<p>docker pull mysql:5.7<br>docker run -it mysql:5.7 mysql -V<br>mysql  Ver 14.14 Distrib 5.7.44, for Linux (x86_64) using  EditLine wrapper</p>
+<h1 id="如下命令删除docker镜像"><a href="#如下命令删除docker镜像" class="headerlink" title="如下命令删除docker镜像"></a>如下命令删除docker镜像</h1><p>docker rmi image_name<br>3、docker imags 查看所有镜像<br>docker images<br>REPOSITORY    TAG       IMAGE ID       CREATED        SIZE<br>ubuntu        latest    3db8720ecbf5   12 days ago    77.9MB<br>hello-world   latest    d2c94e258dcb   9 months ago   13.3kB<br>4、docker run 启动镜像<br>docker run -it ubuntu &#x2F;bin&#x2F;bash # -i:交互式操作 -t:终端 ubuntu为镜像，&#x2F;bin&#x2F;bash是命令<br>root@e518c1b19385:&#x2F;# uname -a<br>Linux e518c1b19385 4.19.112-2.el8.x86_64 #1 SMP Wed Jun 10 09:04:49 EDT 2020 x86_64 x86_64 x86_64 GNU&#x2F;Linux<br>root@e518c1b19385:&#x2F;# exit<br>exit  # 使用exit退出容器</p>
+<p>docker ps -a<br>CONTAINER ID   IMAGE     COMMAND       CREATED          STATUS                     PORTS     NAMES<br>e518c1b19385   ubuntu    “&#x2F;bin&#x2F;bash”   11 seconds ago   Exited (0) 3 seconds ago             busy_carver</p>
+<h1 id="这里容器已经退出，可以使用如下命令启动容器"><a href="#这里容器已经退出，可以使用如下命令启动容器" class="headerlink" title="这里容器已经退出，可以使用如下命令启动容器"></a>这里容器已经退出，可以使用如下命令启动容器</h1><p>docker start container_id<br>建议暂停后容器docker stop container_id后使用docker start container_id启动容器<br>正在运行的容器可以使用docker restart container_id重启</p>
+<p>docker start … 包含容器文件系统挂载的操作<br>docker stop … 包含容器文件系统卸载的操作<br>docker restart … 不包含容器文件系统的卸载与挂载操作，本质上docker restart不涉及文件系统的操作，因此restart命令并不是stop与start两个命令的顺序叠加。</p>
+<p>docker run -itd ubuntu &#x2F;bin&#x2F;bash # -d参数后台运行容器<br>8f0895d80f5133bedba6e4ea23233cae923ee898ca135a4ced849dc06f1a19f3<br>docker ps -a<br>CONTAINER ID   IMAGE     COMMAND       CREATED          STATUS                      PORTS     NAMES<br>8f0895d80f51   ubuntu    “&#x2F;bin&#x2F;bash”   6 seconds ago    Up 5 seconds                          beautiful_sanderson</p>
+<p>在使用 -d 参数时，容器启动后会进入后台。此时想要进入容器，可以通过以下指令进入：<br>docker attach<br>docker exec：推荐大家使用 docker exec 命令，因为此命令会退出容器终端，但不会导致容器的停止</p>
+<p>docker ps<br>CONTAINER ID   IMAGE     COMMAND       CREATED        STATUS        PORTS     NAMES<br>8f0895d80f51   ubuntu    “&#x2F;bin&#x2F;bash”   28 hours ago   Up 28 hours             beautiful_sanderson<br>docker attach 8f0895d80f51<br>root@8f0895d80f51:&#x2F;# exit<br>exit<br>docker ps -a<br>CONTAINER ID   IMAGE     COMMAND       CREATED        STATUS                      PORTS     NAMES<br>8f0895d80f51   ubuntu    “&#x2F;bin&#x2F;bash”   28 hours ago   Exited (0) 3 seconds ago              beautiful_sanderson<br>e518c1b19385   ubuntu    “&#x2F;bin&#x2F;bash”   28 hours ago   Exited (137) 28 hours ago             busy_carver</p>
+<p>docker exec -it 8f0895d80f51 &#x2F;bin&#x2F;bash<br>root@8f0895d80f51:&#x2F;# exit<br>exit<br>docker ps -a<br>CONTAINER ID   IMAGE     COMMAND       CREATED        STATUS                      PORTS     NAMES<br>8f0895d80f51   ubuntu    “&#x2F;bin&#x2F;bash”   28 hours ago   Up About a minute                     beautiful_sanderson<br>e518c1b19385   ubuntu    “&#x2F;bin&#x2F;bash”   28 hours ago   Exited (137) 28 hours ago             busy_carver<br>5、docker导出容器<br>docker ps -a<br>CONTAINER ID   IMAGE     COMMAND       CREATED        STATUS                      PORTS     NAMES<br>8f0895d80f51   ubuntu    “&#x2F;bin&#x2F;bash”   28 hours ago   Up 13 minutes                         beautiful_sanderson<br>e518c1b19385   ubuntu    “&#x2F;bin&#x2F;bash”   29 hours ago   Exited (137) 28 hours ago             busy_carver</p>
+<p>docker export e518c1b19385 &gt; ubuntu.tar<br>cat ubuntu.tar | docker import - test_ubuntu<br>sha256:56d84bf3d48c4ce27deb2528bd7d3bc958bc683617f0c830796a5a1a55862c30</p>
+<p>docker images<br>REPOSITORY           TAG       IMAGE ID       CREATED         SIZE<br>test_ubuntu          latest    56d84bf3d48c   7 seconds ago   77.9MB<br>ubuntu               latest    3db8720ecbf5   2 weeks ago     77.9MB<br>mysql                8.0       7e6df4470869   5 weeks ago     603MB<br>mysql                5.7       5107333e08a8   2 months ago    501MB<br>hello-world          latest    d2c94e258dcb   10 months ago   13.3kB<br>mysql&#x2F;mysql-server   latest    1d9c2219ff69   13 months ago   496MB<br>centos               latest    5d0da3dc9764   2 years ago     231MB<br>6、docker删除容器<br>docker rm -f container_id</p>
+<h1 id="如下命令可以清楚所有处于终止状态的容器"><a href="#如下命令可以清楚所有处于终止状态的容器" class="headerlink" title="如下命令可以清楚所有处于终止状态的容器"></a>如下命令可以清楚所有处于终止状态的容器</h1><p>docker container prune<br>7、Dockerfile定制镜像<br>cat Dockerfile<br>FROM nginx<br>RUN echo ‘这是一个本地构建的nginx镜像’ &gt; &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html&#x2F;index.html</p>
+<p>docker build -t nginx:v3 . # 这里不能直接指向Dockerfile，只能指向Dockerfile所在的目录。<br>Sending build context to Docker daemon  2.048kB<br>Step 1&#x2F;2 : FROM nginx<br> —&gt; e4720093a3c1<br>Step 2&#x2F;2 : RUN echo ‘这是一个本地构建的nginx镜像’ &gt; &#x2F;usr&#x2F;share&#x2F;nginx&#x2F;html&#x2F;index.html<br> —&gt; Running in a26691397323<br>Removing intermediate container a26691397323<br> —&gt; 51193a0707ac<br>Successfully built 51193a0707ac<br>Successfully tagged nginx:v3</p>
+<p>docker images<br>REPOSITORY           TAG       IMAGE ID       CREATED         SIZE<br>nginx                v3        51193a0707ac   9 minutes ago   187MB<br>test_ubuntu          latest    56d84bf3d48c   19 hours ago    77.9MB<br>nginx                latest    e4720093a3c1   2 weeks ago     187MB<br>ubuntu               latest    3db8720ecbf5   2 weeks ago     77.9MB<br>mysql                8.0       7e6df4470869   5 weeks ago     603MB<br>mysql                5.7       5107333e08a8   2 months ago    501MB<br>hello-world          latest    d2c94e258dcb   10 months ago   13.3kB<br>mysql&#x2F;mysql-server   latest    1d9c2219ff69   13 months ago   496MB<br>centos               latest    5d0da3dc9764   2 years ago     231MB</p>
+<p>docker run -it nginx:v3 &#x2F;bin&#x2F;bash<br>root@8dcf606c3e70:&#x2F;# cat usr&#x2F;share&#x2F;nginx&#x2F;html&#x2F;index.html<br>这是一个本地构建的nginx镜像<br>8、docker导出镜像<br>docker save nginx &gt;&#x2F;tmp&#x2F;nginx.tar.gz<br>docker load &lt;&#x2F;tmp&#x2F;nginx.tar.gz</p>
+<p>1.docker save保存的是镜像，docker export保存的是容器<br>2.docker save会保留镜像所有的历史记录，docker export不会，即没有commit历史<br>3.docker load用来载入镜像包，docker import用来载入容器包，但两者都会恢复为镜像；<br>4.docker load不能对载入的镜像重命名，而docker import可以为镜像指定新名称。<br>9、docker运行一个web应用<br>docker pull training&#x2F;webapp<br>Using default tag: latest<br>latest: Pulling from training&#x2F;webapp<br>Image docker.io&#x2F;training&#x2F;webapp:latest uses outdated schema1 manifest format. Please upgrade to a schema2 image for better future compatibility. More information at <a target="_blank" rel="noopener" href="https://docs.docker.com/registry/spec/deprecated-schema-v1/">https://docs.docker.com/registry/spec/deprecated-schema-v1/</a><br>e190868d63f8: Pull complete<br>909cd34c6fd7: Pull complete<br>0b9bfabab7c1: Pull complete<br>a3ed95caeb02: Pull complete<br>10bbbc0fc0ff: Pull complete<br>fca59b508e9f: Pull complete<br>e7ae2541b15b: Pull complete<br>9dd97ef58ce9: Pull complete<br>a4c1b0cb7af7: Pull complete<br>Digest: sha256:06e9c1983bd6d5db5fba376ccd63bfa529e8d02f23d5079b8f74a616308fb11d<br>Status: Downloaded newer image for training&#x2F;webapp:latest<br>docker.io&#x2F;training&#x2F;webapp:latest</p>
+<p>docker run -d -P training&#x2F;webapp python app.py # -P:将容器内部使用的网络端口随机映射到我们使用的主机上。-p可以指定容器内部端口绑定到指定的主机端口<br>docker run -d -p 127.0.0.1:5001:5000 training&#x2F;webapp python app.py<br>docker ps -a<br>CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS                      PORTS                     NAMES<br>557db7300f09   training&#x2F;webapp   “python app.py”          8 seconds ago   Up 5 seconds                0.0.0.0:49153-&gt;5000&#x2F;tcp   xenodochial_varahamihira<br>8f1f0fcc1b82   training&#x2F;webapp   “python app.py”          About a minute ago   Up About a minute            127.0.0.1:5001-&gt;5000&#x2F;tcp   serene_hermann</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Docker/" class="category-chain-item">Docker</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Docker基础</div>
+      <div>http://example.com/2025/05/14/Docker基础/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>May 14, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/05/14/systemd-condition-%E7%94%A8%E6%B3%95/" title="systemd condition* 用法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">systemd condition* 用法</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/14/yocto%E5%9F%BA%E7%A1%80/" title="yocto基础">
+                        <span class="hidden-mobile">yocto基础</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
