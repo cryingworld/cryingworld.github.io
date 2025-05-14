@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>安装rust环境</title>
+    <link href="/2025/05/14/%E5%AE%89%E8%A3%85rust%E7%8E%AF%E5%A2%83/"/>
+    <url>/2025/05/14/%E5%AE%89%E8%A3%85rust%E7%8E%AF%E5%A2%83/</url>
+    
+    <content type="html"><![CDATA[<h2 id="rust下载"><a href="#rust下载" class="headerlink" title="rust下载"></a>rust下载</h2><p>windows用户可直接在<a href="https://www.rust-lang.org/tools/install">rust</a>官网下载rust-init.exe</p><p>运行后弹出三个选项进行安装，根据自己的需求进行安装，我这里选择1（会直接安装visual studio，不建议）</p><p><img src="/%5C%E5%AE%89%E8%A3%85rust%E7%8E%AF%E5%A2%83%5Cimage-20250514201129122.png" alt="image-20250514201129122"></p><p>接着会继续选择</p><p><img src="/%5C%E5%AE%89%E8%A3%85rust%E7%8E%AF%E5%A2%83%5Cimage-20250514201444888.png" alt="image-20250514201444888"></p><p>安装完成后即可执行cargo</p><p><img src="/%5C%E5%AE%89%E8%A3%85rust%E7%8E%AF%E5%A2%83%5Cimage-20250514201636765.png" alt="image-20250514201636765"></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>systemd condition* 用法</title>
     <link href="/2025/05/14/systemd-condition-%E7%94%A8%E6%B3%95/"/>
     <url>/2025/05/14/systemd-condition-%E7%94%A8%E6%B3%95/</url>
